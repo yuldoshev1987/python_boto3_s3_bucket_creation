@@ -37,6 +37,21 @@ class S3Service:
         print('Existing buckets:')
         for bucket in response['Buckets']:
             print(bucket["Name"])
+
+    @staticmethod
+    def upload_file(filePath,bucketName,fileName):
+        flag=False
+        s3 = boto3.resource('s3')
+        respose=s3.meta.client.upload_file(filePath, bucketName, fileName)
+        print('*'*50,respose)
+        my_bucket = s3.Bucket(bucketName)
+        for file in my_bucket.objects.all():
+            if file.key==fileName:
+                flag=True
+                break
+        if flag==True:
+            print(fileName,'uploaded successfully ')
+        else:
+            print(fileName, 'uploaded successfully ')
 s=S3Service()
-s.create_bucket('awsboto3example201020205')
-s.get_list_of_Bucket()
+s.upload_file('HelloWorld.txt','ziyotek-cloudmasters','HelloWorld.txt')
